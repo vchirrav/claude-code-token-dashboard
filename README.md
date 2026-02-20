@@ -2,6 +2,8 @@
 
 A zero-dependency, real-time token usage dashboard for Claude Code. Runs locally in your browser, reads directly from Claude Code's session files, and updates live as you work.
 
+![Claude Code Token Dashboard](screenshot.png)
+
 ---
 
 ## Why This Dashboard Is Essential
