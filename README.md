@@ -49,6 +49,21 @@ nvm install 18
 
 ---
 
+## Choosing a Setup Method
+
+| | Quick Start (Manual) | Auto-start with Hooks |
+|---|---|---|
+| **How it starts** | You run `node server.js` once in a terminal | Starts automatically when you open a Claude Code session |
+| **How it stops** | You stop it manually (`Ctrl+C`) | Stops automatically when the Claude Code session ends |
+| **Works across all repos** | Yes — one running instance covers every project on your machine | No — only runs while the specific project that has the hooks configured is open |
+| **Setup effort** | Clone the repo, run one command | Copy hook scripts, set an env var, edit `.claude/settings.json` |
+| **Requires a terminal window** | Yes — the process must stay running | No — runs in the background, no terminal needed |
+| **Best for** | Developers who want the dashboard always available regardless of which project they're in | Developers who want automatic lifecycle management tied to a specific project |
+
+**Bottom line:** If you work across multiple repos and want the dashboard available at all times, use Quick Start. If you want zero manual steps and are happy with the dashboard only running when a particular project is active, use the hooks method.
+
+---
+
 ## Quick Start (Manual)
 
 The core steps are the same on all platforms. Adjust paths to match your OS conventions.
