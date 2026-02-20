@@ -13,29 +13,80 @@ Claude Code's API costs accumulate silently. This dashboard breaks down token co
 The 200k context window fills up faster than expected when working on large codebases. The dashboard shows exactly how full your window is right now, with color-coded warnings at 60% (orange) and 80% (red), giving you time to act before Claude Code forces an unwanted compaction.
 
 **3. Prompt cache efficiency tracking**
-Claude Code uses prompt caching to reduce costs — but only if your context structure supports it. The cache hit rate metric (cache read % vs cache written %) tells you whether caching is working in your favour. A low hit rate signals that your prompts or file context are changing too much between turns, and you're paying full price every time.
+Claude Code uses prompt caching to reduce costs — but only if your context structure supports it. The cache hit rate metric (cache read % vs cache written %) tells you whether caching is working in your favour. A low rate signals that your prompts or file context are changing too much between turns, and you're paying full price every time.
 
 ---
 
 ## Prerequisites
 
-- **Node.js 18+** — the only requirement. No `npm install` needed.
-- Claude Code installed and generating session files in `~/.claude/projects/`
+**Node.js 18+** is the only requirement. No `npm install` needed.
+
+### Windows
+Install Node.js from [nodejs.org](https://nodejs.org) or via winget:
+```powershell
+winget install OpenJS.NodeJS
+```
+The hooks require **Git Bash** (installed with [Git for Windows](https://git-scm.com/download/win)). Run all shell commands in Git Bash, not CMD or PowerShell.
+
+### macOS
+```bash
+brew install node
+```
+Or download from [nodejs.org](https://nodejs.org).
+
+### Linux
+```bash
+# Debian/Ubuntu
+sudo apt install nodejs
+
+# Fedora/RHEL
+sudo dnf install nodejs
+
+# Or use nvm for version management
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.0/install.sh | bash
+nvm install 18
+```
 
 ---
 
 ## Quick Start (Manual)
 
+The core steps are the same on all platforms. Adjust paths to match your OS conventions.
+
+### Windows (Git Bash)
 ```bash
-# 1. Clone this repo anywhere on your machine
-git clone https://github.com/vchirrav/claude-code-token-dashboard.git
-cd claude-code-token-dashboard
+# 1. Clone this repo
+git clone https://github.com/vchirrav/claude-code-token-dashboard.git "$USERPROFILE/claude-code-token-dashboard"
+cd "$USERPROFILE/claude-code-token-dashboard"
 
 # 2. Start the server
 node server.js
 
-# 3. Open in your browser
-#    http://localhost:4000
+# 3. Open http://localhost:4000 in your browser
+```
+
+### macOS
+```bash
+# 1. Clone this repo
+git clone https://github.com/vchirrav/claude-code-token-dashboard.git ~/claude-code-token-dashboard
+cd ~/claude-code-token-dashboard
+
+# 2. Start the server
+node server.js
+
+# 3. Open http://localhost:4000 in your browser
+```
+
+### Linux
+```bash
+# 1. Clone this repo
+git clone https://github.com/vchirrav/claude-code-token-dashboard.git ~/claude-code-token-dashboard
+cd ~/claude-code-token-dashboard
+
+# 2. Start the server
+node server.js
+
+# 3. Open http://localhost:4000 in your browser
 ```
 
 The dashboard auto-selects your most recent Claude Code session and updates live as you chat.
@@ -58,22 +109,44 @@ If you open this cloned repo as your Claude Code project, the included `.claude/
 
 ### Option B — Integrate hooks into your own project
 
-Copy the hook scripts to your project and add them to your Claude Code settings.
+Copy the hook scripts to your project and tell them where this repo lives.
 
 **Step 1: Copy the hooks**
+
 ```bash
 mkdir -p /path/to/your-project/.claude/hooks
 cp .claude/hooks/start-dashboard.sh /path/to/your-project/.claude/hooks/
 cp .claude/hooks/stop-dashboard.sh  /path/to/your-project/.claude/hooks/
 ```
 
-**Step 2: Tell the start hook where you cloned this repo**
+**Step 2: Set `CLAUDE_DASHBOARD_DIR` to your clone path**
 
-Add to your shell profile (`~/.bashrc`, `~/.zshrc`, etc.):
+This environment variable tells the start hook where to find `server.js`.
+
+#### Windows (Git Bash)
+Add to `~/.bashrc`:
+```bash
+export CLAUDE_DASHBOARD_DIR="$USERPROFILE/claude-code-token-dashboard"
+```
+Then reload: `source ~/.bashrc`
+
+#### macOS
+Add to `~/.zshrc` (default shell since macOS Catalina):
 ```bash
 export CLAUDE_DASHBOARD_DIR="$HOME/claude-code-token-dashboard"
 ```
-Or edit line 15 of `start-dashboard.sh` directly to set `DASHBOARD_DIR` to your clone path.
+Then reload: `source ~/.zshrc`
+
+If you use bash, add to `~/.bash_profile` instead.
+
+#### Linux
+Add to `~/.bashrc`:
+```bash
+export CLAUDE_DASHBOARD_DIR="$HOME/claude-code-token-dashboard"
+```
+Then reload: `source ~/.bashrc`
+
+---
 
 **Step 3: Add hooks to your project's `.claude/settings.json`**
 ```json
@@ -125,13 +198,13 @@ Or edit line 15 of `start-dashboard.sh` directly to set `DASHBOARD_DIR` to your 
 
 ## Platform Support
 
-| Platform | Status |
-|----------|--------|
-| Windows (Git Bash) | Supported |
-| macOS | Supported |
-| Linux | Supported |
+| Platform | Shell required for hooks | Stop hook method |
+|----------|--------------------------|-----------------|
+| Windows (Git Bash) | Git Bash | PowerShell `Get-NetTCPConnection` |
+| macOS | bash / zsh | `lsof` + `kill` |
+| Linux | bash | `lsof` + `kill` |
 
-The stop hook auto-detects your OS and uses PowerShell on Windows or `lsof`/`kill` on macOS/Linux.
+The stop hook auto-detects your OS — no manual configuration needed.
 
 ---
 
