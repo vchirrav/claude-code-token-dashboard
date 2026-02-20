@@ -1,0 +1,30 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/start-dashboard.sh",
+            "timeout": 10,
+            "statusMessage": "Starting token dashboard..."
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/stop-dashboard.sh",
+            "timeout": 10,
+            "statusMessage": "Stopping token dashboard..."
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,5 @@
+# Claude Code local settings (user-specific, not for sharing)
+.claude/settings.local.json
+
+# Dashboard server log
+server.log
